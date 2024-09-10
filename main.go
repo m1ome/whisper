@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"math/big"
 	"net/http"
@@ -70,23 +69,20 @@ func main() {
 		log.Fatal("error: please specify a webhook endpoint")
 	}
 
+	body, err := os.ReadFile(db)
+	if err == nil && string(body) != "" {
+		i, err := strconv.ParseInt(string(body), 10, 64)
+		if err != nil {
+			log.Print("db: error corruped last block in block file, used default one")
+		} else if i > 0 {
+			log.Printf("db: found %d block in block file, using it", i)
+			startingBlock = i
+		}
+	}
+
 	// Reading a first block to start from
-	database, err := os.OpenFile(db, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
-	if err != nil {
-		log.Fatalf("error opening database: %v", err)
-	}
-
-	// Reading a last block from file
-	data, err := io.ReadAll(database)
-	if err != nil {
-		log.Fatalf("error reading database file: %v", err)
-	}
-
-	i, err := strconv.ParseInt(string(data), 64, 10)
-	if err == nil {
-		log.Printf("error corruped last block in db, using default one: %v", err)
-	} else if i > 0 {
-		startingBlock = i
+	if _, err := os.OpenFile(db, os.O_CREATE|os.O_RDWR, 0755); err != nil {
+		log.Fatalf("error opening/creating database: %v", err)
 	}
 
 	client, err := ethclient.Dial(endpoint)
@@ -128,6 +124,7 @@ func main() {
 	// Starting readiness probe
 	health := healthcheck.NewHandler()
 	go http.ListenAndServe(livenessEndpoint, health)
+	log.Printf("start listening for liveness checks on %s", livenessEndpoint)
 
 	for {
 		select {

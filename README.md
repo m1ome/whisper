@@ -5,7 +5,9 @@
 ```bash
 Usage of /app/whisper:
   -a string
-    	address for smart contract to watch events from (default "abi.json")
+    	address for smart contract to watch events from
+  -abi string
+    	abi json file (default "abi.json")
   -c int
     	chunk of blocks to parse in one run (default 100)
   -d int
