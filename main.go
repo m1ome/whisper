@@ -135,12 +135,17 @@ func main() {
 				break
 			}
 			lastBlock := header.Number.Int64()
+
 			toBlock := currentBlock + chunkSize
 			if lastBlock < toBlock {
 				toBlock = lastBlock
 			}
 
-			log.Printf("parsing events from %d to %d", currentBlock, currentBlock+chunkSize)
+			if toBlock <= currentBlock {
+				break
+			}
+
+			log.Printf("parsing events from %d to %d", currentBlock, toBlock)
 			query := ethereum.FilterQuery{
 				FromBlock: big.NewInt(currentBlock),
 				ToBlock:   big.NewInt(toBlock),
@@ -160,11 +165,11 @@ func main() {
 				break
 			}
 
-			if err := os.WriteFile(db, []byte(fmt.Sprintf("%d", currentBlock+chunkSize)), 0755); err != nil {
+			if err := os.WriteFile(db, []byte(fmt.Sprintf("%d", toBlock)), 0755); err != nil {
 				log.Fatalf("error writing last block to database: %v", err)
 			}
 
-			currentBlock += chunkSize
+			currentBlock = toBlock
 		}
 	}
 }
