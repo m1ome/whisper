@@ -50,6 +50,7 @@ func init() {
 type WebhookRequest struct {
 	Event  string         `json:"event"`
 	TxHash string         `json:"tx_hash"`
+	Index  int64          `json:"index"`
 	Data   map[string]any `json:"data"`
 }
 
@@ -186,6 +187,7 @@ func parseLogs(logs []types.Log, mappedEvent abi.Event, indexed []abi.Argument, 
 
 			webhookEvent := WebhookRequest{
 				TxHash: l.TxHash.Hex(),
+				Index:  int64(l.Index),
 				Event:  mappedEvent.Name,
 				Data:   currentEvent,
 			}
@@ -210,7 +212,7 @@ func parseLogs(logs []types.Log, mappedEvent abi.Event, indexed []abi.Argument, 
 				return fmt.Errorf("error in response code %d", res.StatusCode)
 			}
 
-			log.Printf("found event at tx %s, with params: %s", webhookEvent.TxHash, webhookEvent)
+			log.Printf("found event at tx %s, with params: %v", webhookEvent.TxHash, webhookEvent)
 		}
 	}
 

@@ -37,6 +37,7 @@ docker run whisper:latest
 {
   "event": "Transfer",
   "tx_hash": "0x029cda1ea895b98ed79ab9e73b093347b6d0077fe7ad89727efdca881190e56f",
+  "index": 0,
   "data": {
     "from": "0x51b80eed094adbfddad6624596cea430c0f543fa",
     "to": "0x21e3013f810b72f317ddaec8ffa371b8e1762e22",
