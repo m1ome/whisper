@@ -23,6 +23,7 @@ import (
 )
 
 var (
+	abiFile          string
 	topicName        string
 	endpoint         string
 	address          string
@@ -37,7 +38,8 @@ var (
 func init() {
 	flag.StringVar(&topicName, "t", "", "topic to parse")
 	flag.StringVar(&endpoint, "e", "", "ethereum api endpoint")
-	flag.StringVar(&address, "a", "abi.json", "address for smart contract to watch events from")
+	flag.StringVar(&address, "a", "", "address for smart contract to watch events from")
+	flag.StringVar(&abiFile, "abi", "abi.json", "abi json file")
 	flag.StringVar(&webhook, "w", "", "webhook enpoint to send events to")
 	flag.StringVar(&livenessEndpoint, "live", ":9000", "liveness endpoint to bind on")
 	flag.StringVar(&db, "db", "block.txt", "database to store information of parsed blocks")
@@ -93,7 +95,7 @@ func main() {
 	}
 	defer client.Close()
 
-	f, err := os.Open("abi.json")
+	f, err := os.Open(abiFile)
 	if err != nil {
 		log.Fatalf("error opening abi file: %v", err)
 	}
