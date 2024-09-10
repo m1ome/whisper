@@ -19,6 +19,7 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: collecting metadata
+        id: meta
         uses: docker/metadata-action@v5
         with:
           images: w1n2k/whisper
