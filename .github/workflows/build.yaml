@@ -20,4 +20,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: m1ome/whisper:latest
+          tags: w1n2k/whisper:latest

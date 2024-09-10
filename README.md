@@ -26,7 +26,7 @@ Usage of /app/whisper:
 
 ## Docker usage
 ```bash
-docker pull m1ome/whisper:latest
+docker pull w1n2k/whisper:latest
 docker run whisper:latest
 ```
 
